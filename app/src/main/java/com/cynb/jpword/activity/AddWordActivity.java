@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.cynb.jpword.data.DataBaseManager;
 import com.cynb.jpword.data.GlobalManager;
 import com.cynb.jpword.data.Word;
+import java.util.List;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -126,13 +127,23 @@ public class AddWordActivity extends AppCompatActivity implements View.OnClickLi
                     Toast.makeText(this, "单词不能为空", Toast.LENGTH_SHORT).show();
                     break;
                 }
-                Word newWord = new Word(chword, jpword, 0, 0, GlobalManager.currentLibrary);
+                Word newWord = new Word(0, chword, jpword, 0, 0, GlobalManager.currentLibrary);
                 dbManager.addWord(newWord);
                 mJapaneseInput.setText("");
                 mChineseInput.setText("");
                 Toast.makeText(this, "插入完毕", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.undo_btn:
+                Word delWord = dbManager.deleteLastWord();
+                if (delWord == null) {
+                    Toast.makeText(this, "没有可以删除的单词", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                int id = delWord.getId();
+                String japanese = delWord.getJapanese();
+                String chinese = delWord.getChinese();
+                String showText = "删除单词: id-" + String.valueOf(id) + japanese + " " + chinese;
+                Toast.makeText(this, showText, Toast.LENGTH_SHORT).show();
                 break;
         }
     }

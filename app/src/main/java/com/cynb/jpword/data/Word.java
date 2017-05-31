@@ -18,7 +18,8 @@ public class Word {
 
     private int libId;
 
-    public Word(String chinese, String japanese, int category, int learningStatus, int libId) {
+    public Word(int id, String chinese, String japanese, int category, int learningStatus, int libId) {
+        this.id = id;
         this.chinese = chinese;
         this.japanese = japanese;
         this.category = category;

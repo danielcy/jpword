@@ -1,7 +1,11 @@
 package com.cynb.jpword.data;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import com.cynb.jpword.tools.Converter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DataBaseManager {
     private WordDBOpenHelper wordDBOpenHelper;
@@ -22,5 +26,18 @@ public class DataBaseManager {
             + "VALUES (" + japanese + ", " + chinese + ", " + String.valueOf(category) + ", " + String.valueOf(libId) + ", " + String.valueOf(learningStatus) + ","
             + "1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);";
         db.execSQL(sql);
+    }
+
+    public Word deleteLastWord() {
+        SQLiteDatabase db = wordDBOpenHelper.getWritableDatabase();
+        Cursor cursor =  db.rawQuery("SELECT * FROM words ORDER BY id DESC LIMIT 0,1;", new String[]{});
+        if(cursor.moveToFirst()) {
+            Word delWord = Converter.getWordFromCursor(cursor);
+            db.execSQL("DELETE FROM words WHERE id=?", new String[]{String.valueOf(delWord.getId())});
+            cursor.close();
+            return delWord;
+        }
+        cursor.close();
+        return null;
     }
 }

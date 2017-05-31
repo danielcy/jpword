@@ -4,13 +4,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.Toast;
 
 public class WordDBOpenHelper extends SQLiteOpenHelper {
-    private Context ctx;
     public WordDBOpenHelper(Context context, String name, CursorFactory factoryint,int version) {
-        super(context, "word.db", null, version  );
-        ctx = context;
+        super(context, name, factoryint, version  );
     }
 
     @Override
@@ -18,6 +15,7 @@ public class WordDBOpenHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE word_libs (\n"
             + "id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
             + "lib_name varchar(16) NOT NULL,\n"
+            + "mark_word_id int UNSIGNED,\n"
             + "status tinyint UNSIGNED NOT NULL,\n"
             + "add_time timestamp NOT NULL,\n"
             + "update_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP\n"
@@ -35,7 +33,7 @@ public class WordDBOpenHelper extends SQLiteOpenHelper {
             + "update_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP\n"
             + ");");
 
-        db.execSQL("INSERT INTO word_libs (lib_name,status,add_time,update_time) VALUES ('default', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);");
+        db.execSQL("INSERT INTO word_libs (lib_name,mark_word_id,status,add_time,update_time) VALUES ('default', 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);");
     }
     
     @Override
