@@ -1,0 +1,17 @@
+<resources>
+  <string name="app_name">jpword</string>
+
+  <string name="today_word">今日单词</string>
+  <string name="add_word">添加新词</string>
+  <string name="word_library">我的词库</string>
+
+  <string name="title_activity_add_word">AddWordActivity</string>
+
+  <string name="chinese_input">请输入中文含义:</string>
+  <string name="japanese_input">请输入日文含义:</string>
+  <string name="hint_chinese_meaning">中文</string>
+  <string name="hint_japanese_meaning">日文</string>
+
+  <string name="commit">提交</string>
+  <string name="undo_last_word">撤销上一个</string>
+</resources>
