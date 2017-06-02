@@ -25,6 +25,7 @@ public class WordDBOpenHelper extends SQLiteOpenHelper {
             + "id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
             + "japanese varchar(16) NOT NULL,\n"
             + "chinese varchar(64) NOT NULL,\n"
+            + "announce varchar(16) NOT NULL,\n"
             + "category int UNSIGNED,\n"
             + "lib_id int UNSIGNED,\n"
             + "learning_status tinyint UNSIGNED,\n"

@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.cynb.jpword.activity">
 
+  <!-- 在SDCard中创建与删除文件权限 -->
+  <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+  <!-- 往SDCard写入数据权限 -->
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
   <application
     android:allowBackup="true"
     android:icon="@mipmap/ic_launcher"
@@ -11,7 +16,7 @@
     <activity
       android:configChanges="orientation|keyboardHidden|screenSize"
       android:label="@string/app_name"
-      android:name="com.cynb.jpword.activity.MenuActivity"
+      android:name=".MenuActivity"
       android:theme="@style/FullscreenTheme">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
@@ -22,8 +27,19 @@
     <activity
       android:configChanges="orientation|keyboardHidden|screenSize"
       android:label="@string/title_activity_add_word"
-      android:name="com.cynb.jpword.activity.AddWordActivity"
+      android:name=".AddWordActivity"
       android:theme="@style/FullscreenTheme">
+    </activity>
+    <activity
+      android:configChanges="orientation|keyboardHidden|screenSize"
+      android:label="@string/title_activity_library_manage"
+      android:name=".LibraryManageActivity"
+      android:theme="@style/FullscreenTheme">
+    </activity>
+    <activity
+      android:label="@string/title_activity_common_fullscreen"
+      android:name=".CommonFullscreenActivity"
+      android:theme="@style/AppTheme.NoActionBar">
     </activity>
   </application>
 

@@ -9,7 +9,7 @@
     android:layout_width="250dp"
     android:layout_height="match_parent"
     android:layout_centerInParent="true"
-    android:layout_marginTop="300dp"
+    android:layout_marginTop="200dp"
     >
     <TextView
       android:id="@+id/chinese_input_label"
@@ -45,28 +45,57 @@
       android:hint="@string/hint_japanese_meaning"
       android:theme="@style/MyEditText"
       />
+    <TextView
+      android:id="@+id/announce_input_label"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/announce_input"
+      android:layout_below="@+id/japanese_input_edit"
+      android:layout_marginTop="20dp"
+      android:textSize="20sp"
+      />
+    <EditText
+      android:id="@+id/announce_input_edit"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:inputType="text"
+      android:layout_below="@+id/announce_input_label"
+      android:hint="@string/hint_announce"
+      android:theme="@style/MyEditText"
+      />
     <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:id="@+id/button_layout"
       android:layout_below="@+id/japanese_input_edit"
-      android:layout_marginTop="60dp"
+      android:layout_marginTop="100dp"
       >
       <Button
         android:id="@+id/commit_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="85dp"
         android:layout_height="wrap_content"
         android:text="@string/commit"
+        android:textSize="12sp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         />
       <Button
         android:id="@+id/undo_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="85dp"
         android:layout_height="wrap_content"
         android:text="@string/undo_last_word"
+        android:textSize="12sp"
         android:layout_toLeftOf="@+id/commit_btn"
         android:layout_toStartOf="@+id/commit_btn"
+        />
+      <Button
+        android:id="@+id/cancel_undo_btn"
+        android:layout_width="85dp"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel_undo"
+        android:textSize="12sp"
+        android:layout_toLeftOf="@+id/undo_btn"
+        android:layout_toStartOf="@+id/undo_btn"
         />
 
     </RelativeLayout>

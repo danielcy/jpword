@@ -8,9 +8,10 @@ public class Converter {
         int id = cursor.getInt(cursor.getColumnIndex("id"));
         String japanese = cursor.getString(cursor.getColumnIndex("japanese"));
         String chinese = cursor.getString(cursor.getColumnIndex("chinese"));
+        String announce = cursor.getString(cursor.getColumnIndex("announce"));
         int category = cursor.getInt(cursor.getColumnIndex("category"));
         int libId = cursor.getInt(cursor.getColumnIndex("lib_id"));
         int learningStatus = cursor.getInt(cursor.getColumnIndex("learning_status"));
-        return new Word(id, chinese, japanese, category, learningStatus, libId);
+        return new Word(id, chinese, japanese, announce, category, learningStatus, libId);
     }
 }
