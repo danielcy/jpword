@@ -2,12 +2,13 @@ package com.cynb.jpword.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+import com.cynb.jpword.data.DataBaseManager;
 import com.cynb.jpword.tools.FileHelper;
+import com.cynb.jpword.tools.SmallUIPoper;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -18,6 +19,7 @@ public class LibraryManageActivity extends CommonFullscreenActivity implements V
     private Button mImportLibBtn;
     private AlertDialog alert = null;
     private AlertDialog.Builder builder = null;
+    private DataBaseManager dbManager;
 
     @Override
     protected void initialize() {
@@ -27,6 +29,7 @@ public class LibraryManageActivity extends CommonFullscreenActivity implements V
 
         mContext = LibraryManageActivity.this;
         mContentView = findViewById(R.id.library_manage_content);
+        dbManager = new DataBaseManager(mContext);
         bindViews();
     }
 
@@ -58,10 +61,25 @@ public class LibraryManageActivity extends CommonFullscreenActivity implements V
                                 .setItems(libNames, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Toast.makeText(getApplicationContext(), "你选择了" + libNames[which], Toast.LENGTH_SHORT).show();
+                                        String title = "导入词库";
+                                        final String filename = libNames[which];
+                                        String message = "确定要导入"+filename+"吗?";
+                                        SmallUIPoper.popUpAJudgeAlertDialog(mContext, title,
+                                            message, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    try{
+                                                        dbManager.importLibrary(filename);
+                                                    } catch (Exception e){
+                                                        e.printStackTrace();
+                                                        Toast.makeText(mContext, "读取文件失败...", Toast.LENGTH_SHORT).show();
+                                                    }
+
+                                                }
+                                            });
                                     }
                                 })
-                                .setNegativeButton("取消", new OnClickListener() {
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                     }

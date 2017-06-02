@@ -34,7 +34,7 @@ public class WordDBOpenHelper extends SQLiteOpenHelper {
             + "update_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP\n"
             + ");");
 
-        db.execSQL("INSERT INTO word_libs (lib_name,mark_word_id,status,add_time,update_time) VALUES ('default', 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);");
+        db.execSQL("INSERT INTO word_libs (lib_name,mark_word_id,status,add_time,update_time) VALUES ('default', 0, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);");
     }
     
     @Override
