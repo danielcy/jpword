@@ -5,19 +5,13 @@ import android.view.View;
 import android.widget.Button;
 
 public class MenuActivity extends CommonFullscreenActivity implements View.OnClickListener {
-    private Button mTodayWordBtn;
-    private Button mAddWordBtn;
-    private Button mMyLibBtn;
-    private View mContentView;
-
     @Override
     protected void initialize() {
         setContentView(R.layout.activity_menu);
 
-        mContentView = findViewById(R.id.menu_content);
-        mTodayWordBtn = (Button) findViewById(R.id.button_pos1);
-        mAddWordBtn = (Button) findViewById(R.id.button_pos2);
-        mMyLibBtn = (Button) findViewById(R.id.button_pos3);
+        // Button mTodayWordBtn = (Button) findViewById(R.id.button_pos1);
+        Button mAddWordBtn = (Button) findViewById(R.id.button_pos2);
+        Button mMyLibBtn = (Button) findViewById(R.id.button_pos3);
 
         mAddWordBtn.setOnClickListener(this);
         mMyLibBtn.setOnClickListener(this);

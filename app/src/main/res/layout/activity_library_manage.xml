@@ -1,24 +1,70 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/library_manage_content"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+  android:orientation="vertical"
   android:background="#0099cc"
   tools:context="com.cynb.jpword.activity.LibraryManageActivity">
-  <RelativeLayout
-    android:id="@+id/library_manage_content"
-    android:layout_width="250dp"
-    android:layout_height="match_parent"
-    android:layout_centerInParent="true"
-    android:layout_marginTop="200dp"
-    >
-
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:orientation="horizontal"
+    android:layout_weight="1">
+    <Button
+      android:id="@+id/select_lib_btn"
+      android:layout_width="wrap_content"
+      android:layout_weight="1"
+      android:layout_height="match_parent"
+      android:text="@string/select_library"
+      android:textSize="20sp"
+      android:background="@drawable/lib_btn_selector"
+      />
+    <View
+      android:layout_width="1px"
+      android:layout_height="match_parent"
+      android:background="#C0C0C0" />
     <Button
       android:id="@+id/import_lib_btn"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:layout_height="match_parent"
       android:text="@string/import_library"
+      android:textSize="20sp"
+      android:background="@drawable/lib_btn_selector"
       />
+  </LinearLayout>
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="1px"
+    android:background="#C0C0C0" />
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    >
+    <Button
+      android:id="@+id/delete_lib_btn"
+      android:layout_width="wrap_content"
+      android:layout_weight="1"
+      android:layout_height="match_parent"
+      android:text="@string/delete_library"
+      android:textSize="20sp"
+      android:background="@drawable/lib_btn_selector"
+      />
+    <View
+      android:layout_width="1px"
+      android:layout_height="match_parent"
+      android:background="#C0C0C0" />
+    <Button
+      android:id="@+id/check_lib_btn"
+      android:layout_width="wrap_content"
+      android:layout_weight="1"
+      android:layout_height="match_parent"
+      android:text="@string/check_library"
+      android:textSize="20sp"
+      android:background="@drawable/lib_btn_selector"
+      />
+  </LinearLayout>
+</LinearLayout>
 
-  </RelativeLayout>
-
-</RelativeLayout>

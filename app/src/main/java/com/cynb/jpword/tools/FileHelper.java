@@ -2,7 +2,6 @@ package com.cynb.jpword.tools;
 
 import android.content.Context;
 import android.os.Environment;
-import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,6 +12,10 @@ public class FileHelper {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             String dirpath = Environment.getExternalStorageDirectory().getCanonicalPath() + "/jpword";
             File jpwordDir = createOrFetchDir(dirpath);
+            if (jpwordDir == null){
+                ToastUtil.showMessage(context, "文件夹不存在: " + dirpath);
+                return null;
+            }
             File[] files = jpwordDir.listFiles();
             List<File> result = new ArrayList<>();
             for(File file: files) {
@@ -23,7 +26,7 @@ public class FileHelper {
             }
             return result;
         } else {
-            Toast.makeText(context, "SD卡不存在或者不可读写", Toast.LENGTH_SHORT).show();
+            ToastUtil.showMessage(context, "SD卡不存在或者不可读写");
             return null;
         }
     }

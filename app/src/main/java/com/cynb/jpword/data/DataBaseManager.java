@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import android.widget.Toast;
 import com.cynb.jpword.tools.Converter;
 import com.cynb.jpword.tools.FileHelper;
 import com.google.gson.Gson;
@@ -18,11 +17,9 @@ import java.util.Map;
 public class DataBaseManager {
     private WordDBOpenHelper wordDBOpenHelper;
     private static final int wordDBLatestVersion = 1;
-    private Context mContext;
 
     public DataBaseManager(Context context) {
         wordDBOpenHelper = new WordDBOpenHelper(context, "word.db", null, wordDBLatestVersion);
-        mContext = context;
     }
 
     public boolean addWord(Word word) {
@@ -64,12 +61,12 @@ public class DataBaseManager {
     }
 
     @SuppressWarnings("unchecked")
-    public void importLibrary(String libFileName) throws Exception{
+    public boolean importLibrary(String libFileName) throws Exception{
         StringBuilder sb = new StringBuilder("");
         File libFile = FileHelper.getFileByName(libFileName);
         if (libFile == null || !libFile.exists()){
             Log.e("LibLoadError","cannot find lib file in jpword directory");
-            return;
+            return false;
         }
         FileInputStream input = new FileInputStream(libFile);
         byte[] temp = new byte[1024];
@@ -83,8 +80,8 @@ public class DataBaseManager {
         Map<String, Object>libMap = gson.fromJson(jsonStr, new TypeToken<Map<String, Object>>() {}.getType());
         String libName = libMap.get("name").toString();
         if (hasLibrary(libName)){
-            Toast.makeText(mContext, "已存在同名的词库，导入失败", Toast.LENGTH_SHORT).show();
-            return;
+            Log.e("LibLoadError","already has a same library. libname:" + libName);
+            return false;
         }
         int newId = addLibrary(libName);
         List<Map<String, Object>>wordList = (ArrayList<Map<String, Object>>)libMap.get("words");
@@ -94,10 +91,10 @@ public class DataBaseManager {
             String announce = wordMap.get("announce").toString();
             int category = (int)Float.parseFloat(wordMap.get("category").toString());
             int learningStatus = (int)Float.parseFloat(wordMap.get("learningStatus").toString());
-            int libId = newId;
-            Word newWord = new Word(0, chinese, japanese, announce, category, learningStatus, libId);
+            Word newWord = new Word(0, chinese, japanese, announce, category, learningStatus, newId);
             addWord(newWord);
         }
+        return true;
     }
 
     private boolean hasLibrary(String libName) {
@@ -125,5 +122,24 @@ public class DataBaseManager {
         }
         cursor.close();
         return id;
+    }
+
+    public List<WordLibrary> getAllLibrarys() {
+        List<WordLibrary> libs = new ArrayList<>();
+        SQLiteDatabase db = wordDBOpenHelper.getWritableDatabase();
+        Cursor cursor =  db.rawQuery("SELECT * FROM word_libs;", new String[]{});
+        if (!cursor.moveToFirst()) {
+            cursor.close();
+            return libs;
+        }
+        do {
+            int id = cursor.getInt(cursor.getColumnIndex("id"));
+            String libName = cursor.getString(cursor.getColumnIndex("lib_name"));
+            int markWordId = cursor.getInt(cursor.getColumnIndex("mark_word_id"));
+            WordLibrary lib = new WordLibrary(id, libName, markWordId);
+            libs.add(lib);
+        } while (cursor.moveToNext());
+        cursor.close();
+        return libs;
     }
 }
