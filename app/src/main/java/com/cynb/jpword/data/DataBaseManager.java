@@ -11,6 +11,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -109,6 +110,34 @@ public class DataBaseManager {
             addWord(newWord);
         }
         return true;
+    }
+
+    public String exportLibrary(WordLibrary lib, String name) {
+        SQLiteDatabase db = wordDBOpenHelper.getWritableDatabase();
+        int libId = lib.getId();
+        String realName = "[jpword_lib]" + name + ".json";
+        Cursor cursor =  db.rawQuery("SELECT * FROM words WHERE lib_id=?;", new String[]{String.valueOf(libId)});
+        if (!cursor.moveToFirst()){
+            return null;
+        }
+        Map<String, Object> exportMap = new HashMap<>();
+        exportMap.put("name", name);
+        List<Word> exportWordList = new ArrayList<>();
+        do {
+            Word curWord = Converter.getWordFromCursor(cursor);
+            exportWordList.add(curWord);
+        } while (cursor.moveToNext());
+        exportMap.put("words", exportWordList);
+        Gson gson = new Gson();
+        String exportJsonStr = gson.toJson(exportMap);
+        String filepath;
+        try {
+            filepath = FileHelper.writeLibFile(realName, exportJsonStr);
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        return filepath;
     }
 
     private boolean hasLibrary(String libName) {

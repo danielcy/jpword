@@ -1,11 +1,13 @@
 package com.cynb.jpword.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import com.cynb.jpword.data.DataBaseManager;
 import com.cynb.jpword.data.GlobalManager;
 import com.cynb.jpword.data.WordLibrary;
@@ -36,12 +38,12 @@ public class LibraryManageActivity extends CommonFullscreenActivity implements V
         Button mSelectLibBtn = (Button)findViewById(R.id.select_lib_btn);
         Button mImportLibBtn = (Button)findViewById(R.id.import_lib_btn);
         Button mDeleteLibBtn = (Button)findViewById(R.id.delete_lib_btn);
-        Button mCheckLibBtn  = (Button)findViewById(R.id.check_lib_btn);
+        Button mExportLibBtn = (Button)findViewById(R.id.export_lib_btn);
 
         mSelectLibBtn.setOnClickListener(this);
         mImportLibBtn.setOnClickListener(this);
         mDeleteLibBtn.setOnClickListener(this);
-        mCheckLibBtn. setOnClickListener(this);
+        mExportLibBtn.setOnClickListener(this);
     }
 
     @Override
@@ -108,11 +110,17 @@ public class LibraryManageActivity extends CommonFullscreenActivity implements V
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     try{
+                                                        ProgressDialog progressDialog = new ProgressDialog(mContext);
+                                                        progressDialog.setTitle("词库导入中");
+                                                        progressDialog.setMessage("正在导入词库，请稍后......");
+                                                        progressDialog.setCancelable(false);
+                                                        progressDialog.show();
                                                         if (!dbManager.importLibrary(filename)){
                                                             ToastUtil.showMessage(mContext, "导入失败，已存在同名词库或词库文件出错");
                                                         } else {
                                                             ToastUtil.showMessage(mContext, "导入成功");
                                                         }
+                                                        progressDialog.dismiss();
                                                     } catch (Exception e){
                                                         e.printStackTrace();
                                                         ToastUtil.showMessage(mContext, "读取文件失败...");
@@ -122,7 +130,7 @@ public class LibraryManageActivity extends CommonFullscreenActivity implements V
                                             });
                                     }
                                 })
-                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener(){
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                     }
@@ -167,6 +175,11 @@ public class LibraryManageActivity extends CommonFullscreenActivity implements V
                                         SmallUIPoper.popUpAJudgeAlertDialog(mContext,title, message , new DialogInterface.OnClickListener(){
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
+                                                ProgressDialog progressDialog = new ProgressDialog(mContext);
+                                                progressDialog.setTitle("词库删除中");
+                                                progressDialog.setMessage("正在删除词库，请稍后......");
+                                                progressDialog.setCancelable(false);
+                                                progressDialog.show();
                                                 for(WordLibrary lib:checkDelLibs){
                                                     if(dbManager.delLibrary(lib)){
                                                         if (GlobalManager.currentLibrary == lib.getId()){
@@ -177,13 +190,55 @@ public class LibraryManageActivity extends CommonFullscreenActivity implements V
                                                         ToastUtil.showMessage(mContext, "词库不存在: " + lib.getLibName());
                                                     }
                                                 }
+                                                progressDialog.dismiss();
                                             }
                                         });
                                     }
                                 }).create();
                 alert.show();
                 break;
-            case R.id.check_lib_btn:
+            case R.id.export_lib_btn:
+                builder = new AlertDialog.Builder(this);
+                final List<WordLibrary> exportLibs = dbManager.getAllLibrarys(false);
+                if (exportLibs.isEmpty()) {
+                    ToastUtil.showMessage(this, "没有有效的词库");
+                    break;
+                }
+                String[] exportNames = new String[exportLibs.size()];
+                int m = 0;
+                for (WordLibrary lib:exportLibs) {
+                    exportNames[m] = lib.getLibName();
+                    m++;
+                }
+                alert = builder.setTitle("选择要导出的词库")
+                    .setItems(exportNames, new OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            final WordLibrary exportLib = exportLibs.get(which);
+                            String title = "导出词库";
+                            String message = "请输入导出词库的新库名: ";
+                            final EditText edit = new EditText(mContext);
+                            SmallUIPoper.popUpAnAlertDialogWithView(mContext, title, message, edit, new DialogInterface.OnClickListener(){
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String newName = edit.getText().toString();
+                                    ProgressDialog progressDialog = new ProgressDialog(mContext);
+                                    progressDialog.setTitle("导出词库中");
+                                    progressDialog.setMessage("正在导出词库，请稍后......");
+                                    progressDialog.setCancelable(false);
+                                    progressDialog.show();
+                                    String filepath = dbManager.exportLibrary(exportLib, newName);
+                                    progressDialog.dismiss();
+                                    if (filepath == null){
+                                        ToastUtil.showMessage(mContext, "词库导出失败");
+                                        return;
+                                    }
+                                    ToastUtil.showMessage(mContext, "词库导出成功: " + filepath);
+                                }
+                            });
+                        }
+                    }).create();
+                alert.show();
                 break;
         }
     }

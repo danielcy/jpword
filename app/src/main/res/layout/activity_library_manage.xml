@@ -57,7 +57,7 @@
       android:layout_height="match_parent"
       android:background="#C0C0C0" />
     <Button
-      android:id="@+id/check_lib_btn"
+      android:id="@+id/export_lib_btn"
       android:layout_width="wrap_content"
       android:layout_weight="1"
       android:layout_height="match_parent"

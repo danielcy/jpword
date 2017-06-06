@@ -3,6 +3,7 @@ package com.cynb.jpword.tools;
 import android.content.Context;
 import android.os.Environment;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,5 +58,18 @@ public class FileHelper {
             }
         }
         return jpwordDir;
+    }
+
+    public static String writeLibFile(String filename, String libJson) throws Exception{
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            String dirpath = Environment.getExternalStorageDirectory().getCanonicalPath() + "/jpword";
+            String filepath = dirpath + "/" + filename;
+            FileOutputStream out = new FileOutputStream(filepath);
+            out.write(libJson.getBytes());
+            out.close();
+            return filepath;
+        } else {
+            return null;
+        }
     }
 }
