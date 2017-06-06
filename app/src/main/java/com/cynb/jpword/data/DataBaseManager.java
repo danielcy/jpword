@@ -154,7 +154,7 @@ public class DataBaseManager {
         return false;
     }
 
-    public List<WordLibrary> getAllLibrarys() {
+    public List<WordLibrary> getAllLibrarys(boolean noDefault) {
         List<WordLibrary> libs = new ArrayList<>();
         SQLiteDatabase db = wordDBOpenHelper.getWritableDatabase();
         Cursor cursor =  db.rawQuery("SELECT * FROM word_libs;", new String[]{});
@@ -164,6 +164,9 @@ public class DataBaseManager {
         }
         do {
             int id = cursor.getInt(cursor.getColumnIndex("id"));
+            if(noDefault && id == 1){
+                continue;
+            }
             String libName = cursor.getString(cursor.getColumnIndex("lib_name"));
             int markWordId = cursor.getInt(cursor.getColumnIndex("mark_word_id"));
             WordLibrary lib = new WordLibrary(id, libName, markWordId);

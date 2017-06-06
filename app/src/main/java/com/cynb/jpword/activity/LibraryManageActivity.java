@@ -51,19 +51,23 @@ public class LibraryManageActivity extends CommonFullscreenActivity implements V
         switch (v.getId()) {
             case R.id.select_lib_btn:
                 builder = new AlertDialog.Builder(this);
-                final List<WordLibrary> libs = dbManager.getAllLibrarys();
+                final List<WordLibrary> libs = dbManager.getAllLibrarys(false);
                 if (libs.isEmpty()) {
                     ToastUtil.showMessage(this, "没有有效的词库");
                     break;
                 }
                 String[] names = new String[libs.size()];
                 int k = 0;
+                int check = 0;
                 for (WordLibrary lib:libs) {
                     names[k] = lib.getLibName();
+                    if (lib.getId() == GlobalManager.currentLibrary){
+                        check = k;
+                    }
                     k++;
                 }
                 alert = builder.setTitle("选择当前词库")
-                                .setSingleChoiceItems(names, 0, new OnClickListener() {
+                                .setSingleChoiceItems(names, check, new OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         GlobalManager.currentLibrary = libs.get(which).getId();
@@ -127,9 +131,9 @@ public class LibraryManageActivity extends CommonFullscreenActivity implements V
                 break;
             case R.id.delete_lib_btn:
                 builder = new AlertDialog.Builder(this);
-                final List<WordLibrary> delLibs = dbManager.getAllLibrarys();
+                final List<WordLibrary> delLibs = dbManager.getAllLibrarys(true);
                 if (delLibs.isEmpty()) {
-                    ToastUtil.showMessage(this, "没有有效的词库");
+                    ToastUtil.showMessage(this, "没有有效的外部词库");
                     break;
                 }
                 String[] delNames = new String[delLibs.size()];
@@ -165,6 +169,9 @@ public class LibraryManageActivity extends CommonFullscreenActivity implements V
                                             public void onClick(DialogInterface dialog, int which) {
                                                 for(WordLibrary lib:checkDelLibs){
                                                     if(dbManager.delLibrary(lib)){
+                                                        if (GlobalManager.currentLibrary == lib.getId()){
+                                                            GlobalManager.currentLibrary = 1;
+                                                        }
                                                         ToastUtil.showMessage(mContext, "词库已删除: " + lib.getLibName());
                                                     } else {
                                                         ToastUtil.showMessage(mContext, "词库不存在: " + lib.getLibName());

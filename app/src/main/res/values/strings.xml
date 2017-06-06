@@ -15,7 +15,7 @@
   <string name="select_library">选择词库</string>
   <string name="import_library">导入词库</string>
   <string name="delete_library">删除词库</string>
-  <string name="check_library">查看词库</string>
+  <string name="export_library">导出词库</string>
 
   <string name="commit">提交</string>
   <string name="undo_last_word">删除上一个</string>

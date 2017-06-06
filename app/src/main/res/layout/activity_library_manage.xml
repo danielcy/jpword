@@ -61,7 +61,7 @@
       android:layout_width="wrap_content"
       android:layout_weight="1"
       android:layout_height="match_parent"
-      android:text="@string/check_library"
+      android:text="@string/export_library"
       android:textSize="20sp"
       android:background="@drawable/lib_btn_selector"
       />
