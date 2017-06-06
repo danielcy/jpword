@@ -22,7 +22,7 @@ public class ToastUtil {
                     public void run() {
                         synchronized (synObj) {
                             if (toast != null) {
-                                toast.cancel();
+                                // toast.cancel();
                                 toast.setText(msg);
                                 toast.setDuration(len);
                             } else {

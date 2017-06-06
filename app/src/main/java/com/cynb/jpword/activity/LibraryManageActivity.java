@@ -14,6 +14,7 @@ import com.cynb.jpword.tools.SmallUIPoper;
 import com.cynb.jpword.tools.ToastUtil;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryManageActivity extends CommonFullscreenActivity implements View.OnClickListener {
@@ -125,6 +126,55 @@ public class LibraryManageActivity extends CommonFullscreenActivity implements V
                 alert.show();
                 break;
             case R.id.delete_lib_btn:
+                builder = new AlertDialog.Builder(this);
+                final List<WordLibrary> delLibs = dbManager.getAllLibrarys();
+                if (delLibs.isEmpty()) {
+                    ToastUtil.showMessage(this, "没有有效的词库");
+                    break;
+                }
+                String[] delNames = new String[delLibs.size()];
+                int j = 0;
+                for (WordLibrary lib:delLibs) {
+                    delNames[j] = lib.getLibName();
+                    j++;
+                }
+                final List<WordLibrary> checkDelLibs = new ArrayList<>();
+                final boolean[] checkItems = new boolean[delLibs.size()];
+                for(int x = 0; x < checkItems.length; x++){
+                    checkItems[x] = false;
+                }
+                alert = builder.setTitle("选择要删除的库:")
+                                .setMultiChoiceItems(delNames, checkItems, new DialogInterface.OnMultiChoiceClickListener(){
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                        checkItems[which] = isChecked;
+                                    }
+                                })
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        for(int x = 0; x < delLibs.size(); x++){
+                                            if (checkItems[x]){
+                                                checkDelLibs.add(delLibs.get(x));
+                                            }
+                                        }
+                                        String title = "删除词库";
+                                        String message = "确定要删除词库吗？(该操作不可恢复)";
+                                        SmallUIPoper.popUpAJudgeAlertDialog(mContext,title, message , new DialogInterface.OnClickListener(){
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                for(WordLibrary lib:checkDelLibs){
+                                                    if(dbManager.delLibrary(lib)){
+                                                        ToastUtil.showMessage(mContext, "词库已删除: " + lib.getLibName());
+                                                    } else {
+                                                        ToastUtil.showMessage(mContext, "词库不存在: " + lib.getLibName());
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                }).create();
+                alert.show();
                 break;
             case R.id.check_lib_btn:
                 break;

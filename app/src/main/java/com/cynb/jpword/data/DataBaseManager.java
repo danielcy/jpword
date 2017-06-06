@@ -60,6 +60,20 @@ public class DataBaseManager {
         return null;
     }
 
+    private void deleteAllWordInLibrary(WordLibrary lib) {
+        SQLiteDatabase db = wordDBOpenHelper.getWritableDatabase();
+        int libId = lib.getId();
+        db.execSQL("DELETE FROM words WHERE lib_id=?", new String[]{String.valueOf(libId)});
+        /*Cursor cursor =  db.rawQuery("SELECT * FROM words WHERE lib_id=?;", new String[]{String.valueOf(libId)});
+        if (!cursor.moveToFirst()){
+            return;
+        }
+        do{
+            Word delWord = Converter.getWordFromCursor(cursor);
+            db.execSQL("DELETE FROM words WHERE id=?", new String[]{String.valueOf(delWord.getId())});
+        } while (cursor.moveToNext());*/
+    }
+
     @SuppressWarnings("unchecked")
     public boolean importLibrary(String libFileName) throws Exception{
         StringBuilder sb = new StringBuilder("");
@@ -122,6 +136,22 @@ public class DataBaseManager {
         }
         cursor.close();
         return id;
+    }
+
+    public boolean delLibrary(WordLibrary lib){
+        int id = lib.getId();
+        String libName = lib.getLibName();
+        SQLiteDatabase db = wordDBOpenHelper.getWritableDatabase();
+
+        Cursor cursor =  db.rawQuery("SELECT * FROM word_libs WHERE id=? AND lib_name=?;", new String[]{String.valueOf(id),libName});
+        if(cursor.moveToFirst()) {
+            db.execSQL("DELETE FROM word_libs WHERE id=?", new String[]{String.valueOf(id)});
+            cursor.close();
+            deleteAllWordInLibrary(lib);
+            return true;
+        }
+        cursor.close();
+        return false;
     }
 
     public List<WordLibrary> getAllLibrarys() {
